@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота 32</title>
+</head>
+<body>
+<div class="container">
+    <h2>Отримання користувачів (GET)</h2>
+    <button onclick="getUsers()">Завантажити користувачів</button>
+    <div id="users"></div>
+
+    <h2>Список постів (GET)</h2>
+    <button onclick="getPosts()">Завантажити пости</button>
+    <div id="posts"></div>
+
+    <h2>Створення нового поста (POST)</h2>
+    <form onsubmit="createPost(event)">
+        <input type="text" id="newTitle" placeholder="Заголовок" required>
+        <textarea id="newBody" placeholder="Текст поста" required></textarea>
+        <button type="submit">Створити пост</button>
+    </form>
+
+    <h2>Редагування поста (PUT)</h2>
+    <form onsubmit="updatePost(event)">
+        <input type="number" id="editId" placeholder="ID поста" required>
+        <input type="text" id="editTitle" placeholder="Новий заголовок" required>
+        <textarea id="editBody" placeholder="Новий текст" required></textarea>
+        <button type="submit">Оновити пост</button>
+    </form>
+
+    <h2>Видалення поста (DELETE)</h2>
+    <input type="number" id="deleteId" placeholder="ID поста">
+    <button onclick="deletePost()">Видалити</button>
+
+    <p class="error" id="error"></p>
+</div>
+</body>
+</html>
