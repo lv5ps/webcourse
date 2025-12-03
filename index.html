@@ -4,6 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Лабораторна робота 32</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background:#f4f4f4; 
+            padding:20px; 
+        }
+        h2 { 
+            color:#222; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius:10px; 
+            }
+        .post, .user { 
+            padding:10px; 
+            border:1px solid #ddd; 
+            margin-bottom:10px; 
+            border-radius:8px; 
+        }
+        button { 
+            padding:6px 12px; 
+            margin-top:5px; 
+            cursor:pointer; 
+        }
+        form { 
+            margin-bottom:20px; 
+        }
+        input, textarea { 
+            width:100%; 
+            padding:8px; 
+            margin:5px 0; 
+        }
+        .error { 
+        color: red; 
+        font-weight:bold; 
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -36,5 +76,79 @@
 
     <p class="error" id="error"></p>
 </div>
+
+<script>
+const API = "https://jsonplaceholder.typicode.com";
+
+async function getUsers() {
+    try {
+        const res = await fetch(`${API}/users`);
+        if (!res.ok) throw new Error("Помилка отримання даних");
+        const users = await res.json();
+        document.getElementById("users").innerHTML = users.map(u => `
+            <div class='user'><b>${u.name}</b> (${u.email})</div>
+        `).join('');
+    } catch (e) { showError(e.message); }
+}
+
+async function createPost(e) {
+    e.preventDefault();
+    try {
+        const res = await fetch(`${API}/posts`, {
+            method: "POST",
+            body: JSON.stringify({
+                title: document.getElementById("newTitle").value,
+                body: document.getElementById("newBody").value,
+                userId: 1
+            }),
+            headers: { 'Content-type': 'application/json; charset=UTF-8' }
+        });
+        if (!res.ok) throw new Error("Помилка створення поста");
+        alert("Пост створено!");
+    } catch (e) { showError(e.message); }
+}
+
+async function updatePost(e) {
+    e.preventDefault();
+    try {
+        const id = document.getElementById("editId").value;
+        const res = await fetch(`${API}/posts/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                title: document.getElementById("editTitle").value,
+                body: document.getElementById("editBody").value,
+                userId: 1
+            }),
+            headers: { 'Content-type': 'application/json; charset=UTF-8' }
+        });
+        if (!res.ok) throw new Error("Помилка оновлення");
+        alert("Пост оновлено!");
+    } catch (e) { showError(e.message); }
+}
+
+async function deletePost() {
+    try {
+        const id = document.getElementById("deleteId").value;
+        const res = await fetch(`${API}/posts/${id}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("Помилка видалення");
+        alert("Пост видалено!");
+    } catch (e) { showError(e.message); }
+}
+
+async function getPosts() {
+    try {
+        const res = await fetch(`${API}/posts`);
+        if (!res.ok) throw new Error("Помилка отримання постів");
+        const posts = await res.json();
+        document.getElementById("posts").innerHTML = posts.slice(0,20).map(p => `
+        <div class='post'><b>${p.title}</b><br>${p.body}</div>
+        `).join('');
+    } catch (e) { showError(e.message); }
+}
+
+function showError(msg) {
+    document.getElementById("error").textContent = msg;
+}
+</script>
 </body>
 </html>
